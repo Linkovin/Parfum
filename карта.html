@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Всесвіт парфум — Каталог</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9f9f9;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #0f0f0f;
+      color: white;
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffd54f;
+      letter-spacing: -0.5px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 28px;
+    }
+
+    .menu a {
+      color: #eee;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+      padding: 8px 4px;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      color: #ffd54f;
+    }
+
+    .right-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 6px;
+    }
+
+    .lang-switch button {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .lang-switch button.active {
+      background: #ffd54f;
+      color: #111;
+    }
+
+    .right-header button.cart-btn {
+      position: relative;
+      background: #ffd54f;
+      border: none;
+      font-size: 24px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .right-header button.cart-btn:hover {
+      background: #ffca28;
+      transform: scale(1.05);
+    }
+
+    #aiChatBtn{
+      position:fixed;
+      bottom:25px;
+      right:25px;
+      background:#111;
+      color:white;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      cursor:pointer;
+      z-index:6000;
+      animation: wiggleAI 2.5s infinite;
+    }
+
+    @keyframes wiggleAI{
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(-6deg); }
+      50% { transform: rotate(6deg); }
+      75% { transform: rotate(-3deg); }
+    }
+  
+
+    #aiChat{
+      position:fixed;
+      bottom:100px;
+      right:25px;
+      width:320px;
+      height:420px;
+      background:white;
+      border-radius:16px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.3);
+      display:none;
+      flex-direction:column;
+      overflow:hidden;
+      z-index:6000;
+    }
+
+  #aiChat.active{
+    display:flex;
+  }
+
+  #aiHeader{
+    background:#111;
+    color:white;
+    padding:12px;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+  }
+
+  #aiMessages{
+    flex:1;
+    padding:10px;
+    overflow-y:auto;
+    font-size:14px;
+  }
+
+  .ai-msg{
+    margin-bottom:10px;
+  }
+
+  .ai-user{
+    text-align:right;
+    color:#333;
+    background:#111;
+    color:white;
+    padding:8px 12px;
+    border-radius:10px;
+    display:inline-block;
+    max-width:85%;
+  }
+
+  .ai-bot{
+    text-align:left;
+    color:#d32f2f;
+    background:#f5f5f5;
+    padding:8px 12px;
+    border-radius:10px;
+    display:inline-block;
+    max-width:85%;
+  }
+
+  #aiInputBox{
+    display:flex;
+    border-top:1px solid #eee;
+  }
+
+  #aiInput{
+    flex:1;
+    border:none;
+    padding:10px;
+  }
+
+  #aiInput:focus{
+    outline:none;
+  }
+
+  #aiInputBox button{
+    background:#111;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    cursor:pointer;
+}
+
+
+    #cartCount {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #f44336;
+      color: white;
+      font-size: 12px;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      padding: 0 4px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    .ai-dot{
+      position:absolute;
+      bottom:6px;
+      right:6px;
+      width:10px;
+      height:10px;
+      background:#00ff6a;
+      border-radius:50%;
+      box-shadow:0 0 8px #00ff6a;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .hero {
+
+    position:relative;
+    height:260px;
+    border-radius:16px;
+    overflow:hidden;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-left:48px;
+    margin-bottom:36px;
+
+    color:white;
+
+    background:url("https://images.unsplash.com/photo-1594035910387-fea47794261f")
+    center/cover no-repeat;
+
+    box-shadow:0 6px 24px rgba(0,0,0,0.25);
+  
+  }
+
+  .hero::before{
+
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:rgba(0,0,0,0.45);
+
+  backdrop-filter:blur(3px);
+
+  }
+
+  .hero h1,
+  .hero p{
+
+  position:relative;
+  z-index:2;
+
+}
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .filters select,
+    .filters input[type="number"] {
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      min-width: 150px;
+    }
+
+    .filters button {
+      background: #111;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transition: all 0.22s;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.12);
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 18px;
+      text-align: center;
+    }
+
+    .price {
+      color: #d32f2f;
+      font-size: 1.18em;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+
+    .buy {
+      background: #111;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .buy:hover {
+      background: #d32f2f;
+    }
+
+    .info-page {
+
+    background:white;
+    padding:40px;
+    border-radius:18px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.12);
+    max-width:860px;
+    margin:0 auto 80px;
+
+    }
+
+    .info-page ul{
+    margin-top:15px;
+    }
+
+    .info-page li{
+
+    background:#f7f7f7;
+    padding:12px 15px;
+    border-radius:10px;
+    margin-bottom:10px;
+    list-style:none;
+
+    }
+
+    .info-page h2 {
+      margin-bottom: 24px;
+      color: #111;
+    }
+
+    /* Кошик */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s;
+      z-index: 900;
+    }
+
+    .cart-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 420px;
+      height: 100%;
+      background: white;
+      box-shadow: -16px 0 48px rgba(0,0,0,0.3);
+      transition: right 0.35s ease;
+      z-index: 950;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.active { right: 0; }
+
+    .cart-drawer h2 {
+      padding: 24px 24px 16px;
+      font-size: 26px;
+      border-bottom: 1px solid #eee;
+    }
+
+    #cartItems {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 24px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .cart-item strong { display: block; margin-bottom: 6px; }
+
+    .remove {
+      color: #d32f2f;
+      font-size: 1.4em;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    .cart-summary {
+      padding: 20px 24px;
+      border-top: 2px solid #eee;
+      background: white;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+    }
+
+    .cart-total {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: right;
+      margin-bottom: 16px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.22s;
+    }
+
+    .checkout-btn:hover:not(:disabled) {
+      background: #d32f2f;
+      transform: translateY(-2px);
+    }
+
+    .checkout-btn:disabled {
+      background: #ccc;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 80px 20px 40px;
+      color: #777;
+      font-size: 16px;
+    }
+
+    .empty-cart::before {
+      content: "🛍️";
+      font-size: 64px;
+      display: block;
+      margin-bottom: 20px;
+      opacity: 0.4;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 2000;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    #toast.show { opacity: 1; }
+
+    .order-popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .order-popup.active { display: flex; }
+
+    .order-content {
+      background: white;
+      padding: 48px 40px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 480px;
+    }
+
+    .order-number {
+      font-size: 36px;
+      color: #d32f2f;
+      margin: 20px 0;
+      font-weight: 700;
+    }
+
+    .close-popup{
+      position:absolute;
+      top:15px;
+      right:20px;
+      font-size:24px;
+      cursor:pointer;
+      color:#777;
+    }
+
+    .close-popup:hover{
+      color:#d32f2f;
+    }
+
+    .order-content{
+      position:relative;
+    }
+
+    .search-bar{
+      display:flex;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .search-bar input{
+      flex:1;
+      padding:14px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      font-size:15px;
+    }
+
+    .search-bar button{
+      background:#111;
+      color:white;
+      border:none;
+      padding:12px 18px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+    .filter-panel{
+      display:none;
+      gap:10px;
+      flex-wrap:wrap;
+      background:white;
+      padding:15px;
+      border-radius:12px;
+      box-shadow:0 5px 20px rgba(0,0,0,0.1);
+      margin-bottom:25px;
+    }
+
+    .filter-panel.active{
+      display:flex;
+    }
+
+    .filter-panel select,
+    .filter-panel input{
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #ddd;
+    }
+    
+    .search-bar{
+      display:flex;
+      gap:12px;
+      margin-bottom:25px;
+    }
+
+    .search-box{
+      flex:1;
+      position:relative;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:14px 14px 14px 42px;
+      border:1px solid #ddd;
+      border-radius:12px;
+      font-size:15px;
+      background:white;
+      transition:all .2s;
+    }
+
+    .search-box input:focus{
+      outline:none;
+      border-color:#ffd54f;
+      box-shadow:0 0 0 3px rgba(255,213,79,.25);
+    }
+
+    .search-icon{
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:16px;
+      opacity:.6;
+    }
+
+    .filter-btn{
+      background:#111;
+      color:white;
+      border:none;
+      padding:12px 18px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:500;
+      transition:.2s;
+    }
+
+    .filter-btn:hover{
+      background:#d32f2f;
+    }
+
+    .product-popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.7);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:5000;
+    }
+
+    .product-popup.active{
+      display:flex;
+    }
+
+    .product-popup-content{
+      background:white;
+      padding:30px;
+      border-radius:18px;
+      max-width:420px;
+      width:90%;
+      text-align:center;
+    }
+
+    @media (max-width: 768px) {
+      .cart-drawer { width: 100%; right: -100%; }
+      .cart-drawer.active { right: 0; }
+      .hero h1 { font-size: 32px; padding-left: 24px; }
+      .products { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+      .filters select, .filters input { min-width: 48%; }
+    }
+
+    @media (max-width: 480px) {
+      .filters { flex-direction: column; }
+      .filters select, .filters input { min-width: 100%; }
+      .lang-switch { gap: 4px; }
+      .lang-switch button { padding: 5px 8px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">Всесвіт парфум</div>
+
+    <nav class="menu">
+      <a data-page="catalog"  onclick="openPage('catalog')">Каталог</a>
+      <a data-page="payment"  onclick="openPage('payment')">Оплата</a>
+      <a data-page="delivery" onclick="openPage('delivery')">Доставка</a>
+      <a data-page="contacts" onclick="openPage('contacts')">Контакти</a>
+    </nav>
+
+    <div class="right-header">
+      <div class="lang-switch">
+        <button id="langUA" class="active" onclick="setLang('ua')">UA</button>
+
+        <button id="langRU" onclick="setLang('ru')">RU</button>
+      </div>
+
+      <button class="cart-btn" onclick="toggleCart()">🛒 <span id="cartCount">0</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div id="pageCatalog" class="page active">
+
+    <div class="hero">
+      <h1>Всесвіт парфум</h1>
+      <p>Оригінальна парфумерія преміум якості</p>
+    </div>
+
+    <!-- Пошук -->
+    <div class="search-bar">
+
+      <div class="search-box">
+
+      <span class="search-icon">🔍</span>
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder=""
+        onkeyup="searchProducts()"
+      >
+      </div>
+
+      <button class="filter-btn" id="filterBtn" onclick="toggleFilter()">⚙</button>
+
+  </div>
+
+    <!-- Панель фільтрів -->
+    <div class="filter-panel" id="filterPanel">
+
+      <select id="categoryFilter">
+        <option value="" id="filterCategory"></option>
+        <option value="men">Чоловічі</option>
+        <option value="women">Жіночі</option>
+      </select>
+
+      <select id="scentFilter">
+        <option value="" id="filterScent"></option>
+        <option value="fresh">Свіжий</option>
+        <option value="sweet">Солодкий</option>
+        <option value="woody">Деревний</option>
+      </select>
+
+      <input id="priceMin" type="number" placeholder="Ціна від">
+
+      <input id="priceMax" type="number" placeholder="Ціна до">
+
+      <button onclick="applyFilters()">Застосувати</button>
+
+    </div>
+
+    <div class="products" id="products"></div>
+  </div>
+
+  <div id="pagePayment" class="page">
+    <div class="info-page">
+      <h2 id="titlePayment">Оплата</h2>
+      <p>Оплата можлива:</p>
+      <ul id="paymentList">
+        <li>💳 Карткою онлайн</li>
+        <li>💵 Готівкою при отриманні</li>
+        <li>₿ Криптовалюта (USDT/BTC) через Telegram</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="pageDelivery" class="page">
+    <div class="info-page">
+      <h2 id="titleDelivery">Доставка</h2>
+      <p>По всій Україні:</p>
+      <ul id="deliveryList">
+        <li>📦 Нова Пошта — 1–2 дні</li>
+        <li>📮 Укрпошта — 2–4 дні</li>
+      </ul>
+      <p>Вартість за тарифами перевізника.</p>
+    </div>
+  </div>
+
+  <div id="pageContacts" class="page">
+    <div class="info-page">
+      <h2 id="titleContacts">Контакти</h2>
+      <p>Найшвидше — через Telegram</p>
+      <p><a href="https://t.me/ваш_канал" target="_blank" style="color:#d32f2f; font-weight:600;">Написати в Telegram</a></p>
+    </div>
+  </div>
+
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+<div class="cart-drawer" id="cartDrawer">
+  <h2 id="cartTitle">Кошик</h2>
+
+  <div id="cartItems"></div>
+
+  <div class="cart-summary" id="cartSummary">
+    <div class="cart-total">
+      <span id="totalLabel">Разом</span>: <span id="cartTotal">0</span> грн
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="showCheckoutForm()" disabled>
+      <span id="checkoutLabel">Оформити замовлення</span>
+    </button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div class="order-popup" id="orderPopup">
+  <div class="order-content">
+    <span class="close-popup" onclick="closeOrder()">✕</span>
+    <h2 id="thanksTitle">Замовлення прийнято!</h2>
+    <div class="order-number" id="orderNumber"></div>
+    <p id="thanksText">Менеджер зв'яжеться з вами протягом 15–60 хвилин.</p>
+  </div>
+</div>
+
+<div class="product-popup" id="productPopup">
+
+  <div class="product-popup-content">
+
+    <span class="close-popup" onclick="closeProduct()">✕</span>
+
+    <img id="popupImg" style="width:100%; border-radius:12px; margin-bottom:15px;">
+
+    <h2 id="popupName"></h2>
+
+    <p id="popupDesc" style="margin:10px 0; color:#555;"></p>
+
+    <div id="popupPrice" style="font-size:20px; color:#d32f2f; margin-bottom:15px;"></div>
+
+    <button class="checkout-btn" id="popupBuy">Додати в кошик</button>
+
+  </div>
+
+</div>
+
+<script>
+const products = [
+
+{
+name:"Dior Sauvage",
+price:1450,
+category:"men",
+scent:"woody",
+desc:"Свіжий деревний аромат з нотами бергамоту, перцю та амброксану.",
+img:"https://u.makeup.com.ua/g/gi/gitdignczqld.jpg"
+},
+
+{
+name:"Emporio Stronger With You Intensely",
+price:2150,
+category:"men",
+scent:"woody",
+desc:"Рожевий перець та лаванда з легкою корицею на старті.",
+img:"https://www.brocard.ua/media/catalog/product/cache/V068434102/eyJ3IjoxMDAwLCJoIjoxMDAwLCJvIjoiY2F0YWxvZ1wvcHJvZHVjdFwvXC8zXC82XC8zNjE0MjcyMjI1NzAxXzEuanBnIn0=/armani-stronger-with-you-intensely.jpg"
+},
+
+{
+name:"Chanel Coco Mademoiselle",
+price:1390,
+category:"women",
+scent:"sweet",
+desc:"Елегантний жіночий аромат з нотами апельсину, троянди та пачулі.",
+img:"https://martshop.com.ua/image/catalog/tovary/perfumery/analog_original/cocomademoiselle.jpg"
+},
+
+{
+name:"Tom Ford Oud Wood",
+price:1890,
+category:"women",
+scent:"woody",
+desc:"Глибокий деревний аромат з нотами удового дерева та ванілі.",
+img:"https://images.unsplash.com/photo-1594035910387-fea47794261f"
+},
+
+]
+
+let cart = [];
+let lang = "ua";
+
+function toggleAIChat(){
+
+  const chat = document.getElementById("aiChat")
+  chat.classList.toggle("active")
+
+  // если чат открылся и пустой — показываем подсказки
+  if(chat.classList.contains("active") &&
+     document.getElementById("aiMessages").innerHTML === ""){
+
+    addMessage(`
+    Привіт 👋<br><br>
+
+    <div onclick="quickAsk('покажи всі')" style="cursor:pointer">• покажи всі</div>
+    <div onclick="quickAsk('дешеві')" style="cursor:pointer">• дешеві</div>
+    <div onclick="quickAsk('dior')" style="cursor:pointer">• Dior</div>
+    <div onclick="quickAsk('жіночі')" style="cursor:pointer">• жіночі аромати</div>
+    `, "bot")
+
+  }
+
+}
+
+function similar(a,b){
+  return a.includes(b) || b.includes(a)
+}
+
+
+function quickAsk(text){
+  document.getElementById("aiInput").value = text
+  sendAI()
+}
+
+function sendAI(){
+  const input = document.getElementById("aiInput")
+  const text = input.value.toLowerCase().trim()
+
+  if(!text) return
+
+  addMessage(text, "user")
+  input.value = ""
+
+  addMessage("...", "bot")
+
+  setTimeout(()=>{
+    document.querySelector(".ai-bot:last-child").remove()
+    aiAnswer(text)
+  }, 250)
+}
+
+function addMessage(text, type){
+  const box = document.getElementById("aiMessages")
+
+  box.innerHTML += `<div class="ai-msg ai-${type}">${text}</div>`
+
+  box.scrollTop = box.scrollHeight
+
+}
+
+function aiAnswer(text){
+
+  let response = ""
+
+  // 1. приветствие (СНАЧАЛА)
+  if(text.includes("привет") || text.includes("hello") || text.includes("hi")){
+    response = "Привіт 👋 Я допоможу знайти парфуми. Напиши, що шукаєш."
+  }
+
+  // 2. показать все товары
+  else if(text.includes("все") || text.includes("товары") || text.includes("покажи")){
+    response = products.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
+  }
+
+  // 3. дешевый
+  else if(text.includes("дешев") || text.includes("cheap")){
+    const cheapest = [...products].sort((a,b)=>a.price-b.price)[0]
+    response = `Найдешевший: ${cheapest.name} — ${cheapest.price} грн`
+  }
+
+  // 4. дорогой
+  else if(text.includes("дорог") || text.includes("expensive")){
+    const expensive = [...products].sort((a,b)=>b.price-a.price)[0]
+    response = `Найдорожчий: ${expensive.name} — ${expensive.price} грн`
+  }
+
+  else if(text.includes("муж") || text.includes("men")){
+  const list = products.filter(p=>p.category==="men")
+  response = list.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
+  }
+
+  else if(text.includes("жен") || text.includes("women")){
+  const list = products.filter(p=>p.category==="women")
+  response = list.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
+  }
+
+  else if(text.includes("до")){
+  const num = parseInt(text)
+  if(num){
+    const list = products.filter(p=>p.price <= num)
+    response = list.length
+      ? list.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
+      : "Нічого не знайдено 😔"
+    }
+  }
+  
+  // 5. поиск товара (ПОСЛЕ общих команд)
+  else{
+
+  // 1. точное совпадение
+  const found = products.find(p =>
+    similar(text, p.name.toLowerCase())
+  )
+
+  if(found){
+    response = `Є товар: <b>${found.name}</b><br>
+    Ціна: ${found.price} грн`
+  }
+
+  else{
+
+    // 2. поиск похожих (по словам)
+    const suggestions = products.filter(p => {
+      const words = p.name.toLowerCase().split(" ")
+      return words.some(w => text.includes(w))
+    })
+
+    if(suggestions.length){
+
+      response = `Можливо ви мали на увазі 👇<br><br>` +
+      suggestions.map(p=>{
+        const index = products.indexOf(p)
+        return `
+          <div style="margin-bottom:6px; cursor:pointer; color:#111"
+          onclick="openProduct(${index})">
+          • ${p.name} (${p.price} грн)
+          <button onclick="addToCart(${index})" style="margin-left:10px;">🛒</button>
+          </div>
+        `
+      }).join("")
+
+    } else {
+      response = "Я не знайшов товар 😔 Спробуй написати точніше або назву парфуму"
+    }
+
+  }
+}
+
+  addMessage(response, "bot")
+  if(type === "bot"){
+  const audio = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b0b7c.mp3")
+  audio.volume = 0.15
+  audio.play()
+  }
+}
+
+
+const translate = {
+  ua: {
+    catalog: "Каталог",
+    payment: "Оплата",
+    delivery: "Доставка",
+    contacts: "Контакти",
+    buy: "Купити",
+    filter: "Фільтр",
+    cartTitle: "Кошик",
+    emptyCart: "Кошик порожній<br>Оберіть парфуми з каталогу",
+    total: "Разом",
+    checkout: "Оформити замовлення",
+    name: "Ім'я",
+    phone: "Телефон",
+    address: "Місто, відділення Нової Пошти",
+    confirm: "Підтвердити замовлення",
+    toastAdded: "Додано до кошика",
+    thanks: "Замовлення прийнято!",
+    thanksText: "Менеджер зв'яжеться з вами протягом 15–60 хвилин.",
+    titlePayment: "Оплата",
+    titleDelivery: "Доставка",
+    titleContacts: "Контакти",
+    paymentText:[
+    "💳 Карткою онлайн",
+    "💵 Готівкою при отриманні",
+    "₿ Криптовалюта (USDT/BTC) через Telegram"
+    ],
+
+    deliveryText:[
+    "📦 Нова Пошта — 1–2 дні",
+    "📮 Укрпошта — 2–4 дні"
+    ]
+  },
+  ru: {
+    catalog: "Каталог",
+    payment: "Оплата",
+    delivery: "Доставка",
+    contacts: "Контакты",
+    buy: "Купить",
+    filter: "Фильтр",
+    cartTitle: "Корзина",
+    emptyCart: "Корзина пустая<br>Выберите парфюм из каталога",
+    total: "Итого",
+    checkout: "Оформить заказ",
+    name: "Имя",
+    phone: "Телефон",
+    address: "Город, отделение Новой Почты",
+    confirm: "Подтвердить заказ",
+    toastAdded: "Добавлено в корзину",
+    thanks: "Заказ принят!",
+    thanksText: "Менеджер свяжется с вами в течение 15–60 минут.",
+    titlePayment: "Оплата",
+    titleDelivery: "Доставка",
+    titleContacts: "Контакты",
+    paymentText:[
+    "💳 Банковская карта онлайн",
+    "💵 Наличными при получении",
+    "₿ Криптовалюта (USDT/BTC) через Telegram"
+    ],
+
+    deliveryText:[
+    "📦 Новая Почта — 1–2 дня",
+    "📮 Укрпочта — 2–4 дня"
+    ]
+  }
+};
+
+
+
+function setLang(l){
+
+
+document.getElementById("filterCategory").innerText =
+lang==="ua" ? "Для кого" : "Для кого"
+
+document.getElementById("filterScent").innerText =
+lang==="ua" ? "Тип аромату" : "Тип аромата"  
+document.getElementById("searchInput").placeholder =
+lang==="ua" ? "Поиск парфюма..." : "Пошук парфумів..."
+
+document.getElementById("filterBtn").innerText =
+"⚙ " + translate[l].filter  
+const payList = document.getElementById("paymentList")
+const delList = document.getElementById("deliveryList")
+
+if(payList){
+
+payList.innerHTML = translate[l].paymentText
+.map(i=>`<li>${i}</li>`)
+.join("")
+
+}
+
+if(delList){
+
+delList.innerHTML = translate[l].deliveryText
+.map(i=>`<li>${i}</li>`)
+.join("")
+
+} 
+  
+lang = l
+
+document.getElementById("langUA").classList.toggle("active", l==="ua")
+document.getElementById("langRU").classList.toggle("active", l==="ru")
+
+document.querySelector('[data-page="catalog"]').innerText = translate[l].catalog
+document.querySelector('[data-page="payment"]').innerText = translate[l].payment
+document.querySelector('[data-page="delivery"]').innerText = translate[l].delivery
+document.querySelector('[data-page="contacts"]').innerText = translate[l].contacts
+
+document.getElementById("titlePayment").innerText = translate[l].titlePayment
+document.getElementById("titleDelivery").innerText = translate[l].titleDelivery
+document.getElementById("titleContacts").innerText = translate[l].titleContacts
+
+document.getElementById("filterBtn").innerText = translate[l].filter
+
+document.getElementById("cartTitle").innerText = translate[l].cartTitle
+document.getElementById("totalLabel").innerText = translate[l].total
+document.getElementById("checkoutLabel").innerText = translate[l].checkout
+
+document.getElementById("thanksTitle").innerText = translate[l].thanks
+document.getElementById("thanksText").innerText = translate[l].thanksText
+
+document.addEventListener("click", () => {
+  const audio = new Audio()
+  audio.play().catch(()=>{})
+}, { once: true })
+
+renderProducts()
+renderCart()
+
+
+}
+
+function renderProducts(list = products) {
+  document.getElementById("products").innerHTML = list.map((p, i) => `
+  <div class="card" onclick="openProduct(${i})">
+
+    <img src="${p.img}" alt="${p.name}">
+
+    <div class="card-content">
+      <h3>${p.name}</h3>
+
+      <div class="price">
+        ${p.price.toLocaleString('uk-UA')} грн
+      </div>
+
+      <button class="buy"
+      onclick="event.stopPropagation(); addToCart(${i})">
+      ${translate[lang].buy}
+      </button>
+
+    </div>
+
+  </div>
+`).join('');
+}
+
+function closeOrder(){
+document.getElementById("orderPopup").classList.remove("active")
+}
+
+function applyFilters() {
+  const cat = document.getElementById("categoryFilter").value;
+  const scent = document.getElementById("scentFilter").value;
+  const min = Number(document.getElementById("priceMin").value) || 0;
+  const max = Number(document.getElementById("priceMax").value) || Infinity;
+
+  renderProducts(products.filter(p =>
+    (!cat || p.category === cat) &&
+    (!scent || p.scent === scent) &&
+    p.price >= min && p.price <= max
+  ));
+}
+
+function addToCart(i) {
+  cart.push(products[i]);
+  renderCart();
+  document.getElementById("toast").textContent = translate[lang].toastAdded;
+  showToast();
+}
+
+function toggleFilter(){
+document.getElementById("filterPanel").classList.toggle("active")
+}
+
+function searchProducts(){
+
+const value = document
+.getElementById("searchInput")
+.value
+.toLowerCase()
+
+const filtered = products.filter(p =>
+p.name.toLowerCase().includes(value)
+)
+
+renderProducts(filtered)
+
+}
+
+function renderCart() {
+  const itemsEl = document.getElementById("cartItems");
+  const totalEl = document.getElementById("cartTotal");
+  const btn = document.getElementById("checkoutBtn");
+
+  let html = "";
+  let total = 0;
+
+  if (cart.length === 0) {
+    html = `<div class="empty-cart">${translate[lang].emptyCart}</div>`;
+    total = 0;
+    btn.disabled = true;
+  } else {
+    cart.forEach((p, i) => {
+      total += p.price;
+      html += `
+        <div class="cart-item">
+          <div>
+            <strong>${p.name}</strong>
+            <div style="color:#d32f2f; margin-top:4px;">${p.price.toLocaleString('uk-UA')} грн</div>
+          </div>
+          <span class="remove" onclick="removeFromCart(${i})">×</span>
+        </div>
+      `;
+    });
+    btn.disabled = false;
+  }
+
+  itemsEl.innerHTML = html;
+  totalEl.textContent = total.toLocaleString('uk-UA');
+  document.getElementById("cartCount").textContent = cart.length;
+}
+
+function removeFromCart(i) {
+  cart.splice(i, 1);
+  renderCart();
+}
+
+function openProduct(i){
+
+const p = products[i]
+
+document.getElementById("popupImg").src = p.img
+document.getElementById("popupName").innerText = p.name
+document.getElementById("popupDesc").innerText = p.desc
+document.getElementById("popupPrice").innerText = p.price + " грн"
+
+document.getElementById("popupBuy").onclick = () => addToCart(i)
+
+document.getElementById("productPopup").classList.add("active")
+
+}
+
+function closeProduct(){
+document.getElementById("productPopup").classList.remove("active")
+}
+
+function toggleCart() {
+  document.getElementById("cartDrawer").classList.toggle("active");
+  document.getElementById("cartOverlay").classList.toggle("active");
+}
+
+function showCheckoutForm() {
+  if (!cart.length) return;
+
+  document.getElementById("cartItems").innerHTML = `
+    <div style="padding:20px 0;">
+    
+      <input id="name" placeholder="${translate[lang].name}"
+      style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+
+      <input id="surname" placeholder="${lang==='ua' ? 'Прізвище' : 'Фамилия'}"
+      style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+
+      <input id="phone" placeholder="${translate[lang].phone}"
+      style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+
+      <input id="address" placeholder="${translate[lang].address}"
+      style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+
+      <select id="payment"
+      style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+
+      <option value="card">Банківська карта</option>
+      <option value="cash">Післяплата (Нова пошта)</option>
+      <option value="crypto">Криптовалюта</option>
+
+      </select>
+
+      <button class="checkout-btn" onclick="createOrder()" style="margin-top:20px;">
+      ${translate[lang].confirm}
+    </button>
+
+    </div>
+  `;
+}
+
+function createOrder() {
+
+const name = document.getElementById("name").value;
+const surname = document.getElementById("surname").value;
+const phone = document.getElementById("phone").value;
+const address = document.getElementById("address").value;
+const payment = document.getElementById("payment").value;
+
+if(!name || !surname || !phone){
+  alert(lang==="ua" ? "Заповніть усі поля" : "Заполните все поля");
+  return;
+}
+
+const orderNumber = 100000 + Math.floor(Math.random()*900000);
+
+let productsList = "";
+
+cart.forEach(p=>{
+productsList += `<li>${p.name} — ${p.price} грн</li>`;
+});
+
+document.getElementById("orderNumber").innerText = "№ " + orderNumber;
+
+document.getElementById("thanksText").innerHTML = `
+<b>${name} ${surname}</b><br>
+Телефон: ${phone}<br>
+Доставка: ${address}<br>
+Спосіб оплати: ${
+payment==="card" ? "Банківська карта" :
+payment==="cash" ? "Післяплата" :
+"Криптовалюта"
+}
+
+<br><br>
+
+<b>${lang==="ua" ? "Ваше замовлення" : "Ваш заказ"}:</b>
+
+<ul style="text-align:left;margin:10px auto;padding-left:20px;max-width:260px">
+${productsList}
+</ul>
+
+<br>
+
+${lang==="ua"
+? "Для оплати перейдіть у Telegram бот і надішліть номер замовлення."
+: "Для оплаты перейдите в Telegram бот и отправьте номер заказа."}
+
+<br><br>
+
+<a href="https://t.me/yourbot" target="_blank"
+style="color:#d32f2f;font-weight:bold;">
+Telegram Bot
+</a>
+`;
+
+document.getElementById("orderPopup").classList.add("active");
+
+cart=[];
+renderCart();
+
+}
+
+function showToast() {
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function openPage(page) {
+  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+  document.getElementById("page" + page[0].toUpperCase() + page.slice(1)).classList.add("active");
+
+  document.querySelectorAll(".menu a").forEach(a => {
+    a.classList.toggle("active", a.dataset.page === page);
+  });
+
+  document.title = {
+    catalog: "Всесвіт парфум — Каталог",
+    payment: "Всесвіт парфум — Оплата",
+    delivery: "Всесвіт парфум — Доставка",
+    contacts: "Всесвіт парфум — Контакти"
+  }[page] || "Всесвіт парфум";
+
+  history.pushState({page}, "", "#" + page);
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+// Ініціалізація
+renderProducts();
+renderCart();
+setLang("ua");  // початкова мова + активація кнопки
+
+window.addEventListener("load", () => {
+
+  // переход по hash
+  const hash = location.hash.replace("#", "")
+  if (["catalog","payment","delivery","contacts"].includes(hash)) {
+    openPage(hash)
+  }
+
+  // enter для AI
+  const input = document.getElementById("aiInput")
+
+  if(input){
+    input.addEventListener("keydown", function(e){
+      if(e.key === "Enter" && !e.shiftKey){
+        e.preventDefault()
+        sendAI()
+      }
+    })
+  }
+
+})
+
+</script>
+<!-- AI Консультант -->
+<div id="aiChatBtn" onclick="toggleAIChat()">
+  🤖
+  <span class="ai-dot"></span>
+  
+</div>
+
+
+
+<div id="aiChat">
+  <div id="aiHeader">
+    AI Консультант
+    <span onclick="toggleAIChat()">✕</span>
+  </div>
+
+  <div id="aiMessages"></div>
+
+  <div id="aiInputBox">
+    <input id="aiInput" placeholder="Спроси про товар...">
+    <button onclick="sendAI()">➤</button>
+  </div>
+</div>
+</body>
+</html>
