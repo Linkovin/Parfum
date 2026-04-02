@@ -29,6 +29,7 @@ try {
 
 const ADMIN_ID = 827330746;
 let lastMessages = {};
+let adminSessions = {};
 
 
 // ================= CREATE ORDER =================
@@ -65,7 +66,7 @@ app.post("/create-order", (req, res) => {
   }
 });
 
-let adminSessions = {};
+// ================= BUTTON HANDLER =================
 
 bot.on("callback_query", (query) => {
   const data = query.data;
