@@ -57,11 +57,29 @@ app.post("/create-order", (req, res) => {
 📞 ${order.phone}
 
 💰 ${total} грн
-`);
-
-  res.json({ ok: true });
+`, {
+  reply_markup: {
+    inline_keyboard: [
+      [{ text: "💬 Відкрити діалог", callback_data: "open_" + order.orderNumber }]
+    ]
+  }
 });
 
+let adminSessions = {};
+
+bot.on("callback_query", (query) => {
+  const data = query.data;
+  const chatId = query.message.chat.id;
+
+  if (chatId !== ADMIN_ID) return;
+
+  if (data.startsWith("open_")) {
+    const orderId = data.replace("open_", "");
+    adminSessions[ADMIN_ID] = orderId;
+
+    bot.sendMessage(ADMIN_ID, `✅ Ви підключились до замовлення №${orderId}`);
+  }
+});
 
 // ================= CLIENT MESSAGE =================
 
@@ -106,7 +124,8 @@ bot.on("message", (msg) => {
 bot.on("message", (msg) => {
   if (msg.chat.id !== ADMIN_ID) return;
 
-  const activeOrder = Object.values(orders).find(o => o.status === "active");
+  const orderId = adminSessions[ADMIN_ID];
+  const activeOrder = orders[orderId];
 
   if (!activeOrder) {
     bot.sendMessage(ADMIN_ID, "❌ Немає активного діалогу");
@@ -122,7 +141,8 @@ bot.on("message", (msg) => {
 bot.onText(/\/done/, (msg) => {
   if (msg.chat.id !== ADMIN_ID) return;
 
-  const activeOrder = Object.values(orders).find(o => o.status === "active");
+  const orderId = adminSessions[ADMIN_ID];
+  const activeOrder = orders[orderId];
 
   if (!activeOrder) {
     bot.sendMessage(ADMIN_ID, "❌ Немає активного діалогу");
@@ -130,11 +150,10 @@ bot.onText(/\/done/, (msg) => {
   }
 
   activeOrder.status = "done";
+  delete adminSessions[ADMIN_ID];
 
-  fs.writeFileSync("orders.json", JSON.stringify(orders, null, 2));
-
-  bot.sendMessage(activeOrder.clientChatId, "✅ Ваше замовлення завершено");
-  bot.sendMessage(ADMIN_ID, "✅ Діалог завершено");
+  bot.sendMessage(activeOrder.clientChatId, "✅ Діалог завершено");
+  bot.sendMessage(ADMIN_ID, "✅ Діалог закрито");
 });
 
 
