@@ -56,7 +56,8 @@ app.post("/create-order", (req, res) => {
 });
 
 bot.on("message", (msg) => {
-  const text = msg.text.replace(/\D/g, "");
+  const match = msg.text.match(/\d{5,}/); // ищем число от 5 цифр
+  const text = match ? match[0] : "";
   const chatId = msg.chat.id;
 
   if (lastMessages[chatId] === text) return;
