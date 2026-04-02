@@ -36,7 +36,7 @@ app.post("/create-order", (req, res) => {
 });
 
 bot.on("message", (msg) => {
-  const text = msg.text;
+  const text = msg.text.replace(/\D/g, "");
   const chatId = msg.chat.id;
 
   if (lastMessages[chatId] === text) return;
