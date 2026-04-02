@@ -972,6 +972,7 @@
 </div>
 
 <script>
+
 const products = [
 
 {
@@ -1011,6 +1012,7 @@ img:"https://images.unsplash.com/photo-1594035910387-fea47794261f"
 },
 
 ]
+
 
 let cart = [];
 let lang = "ua";
@@ -1525,6 +1527,31 @@ Telegram Bot
 `;
 
 document.getElementById("orderPopup").classList.add("active");
+
+const message = `
+🛒 НОВИЙ ЗАКАЗ
+
+👤 ${name} ${surname}
+📞 ${phone}
+📦 ${address}
+
+💳 ${payment}
+
+🧾 Товары:
+${cart.map(p => `${p.name} - ${p.price} грн`).join("\n")}
+`;
+
+fetch("https://api.telegram.org/botТВОЙ_НОВЫЙ_TOKEN/sendMessage", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    chat_id: "827330746",
+    text: message
+  })
+});
+
 
 cart=[];
 renderCart();
