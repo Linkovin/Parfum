@@ -37,6 +37,9 @@ let lastMessages = {};
 app.post("/create-order", (req, res) => {
   const order = req.body;
   orders[String(order.orderNumber)] = order;
+  if (orders[order.orderNumber]) return;
+  order.status = "new";
+  order.clientChatId = null;
   fs.writeFileSync("orders.json", JSON.stringify(orders, null, 2));
 
   let total = 0;
@@ -63,13 +66,49 @@ bot.on("message", (msg) => {
   if (lastMessages[chatId] === text) return;
   lastMessages[chatId] = text;
 
-  const order = orders[String(text)];
+  let order = orders[String(text)];
+  if (order) {
+  order.clientChatId = chatId;
+  order.status = "active";
+  }
 
   if (!order) {
     bot.sendMessage(chatId, "❌ Замовлення не знайдено");
     return;
   }
+  // ответ админа клиенту
+  bot.on("message", (msg) => {
+    if (msg.chat.id !== ADMIN_ID) return;
 
+    const reply = msg.text;
+
+  // ищем активный заказ
+    const activeOrder = Object.values(orders).find(o => o.status === "active");
+
+    if (!activeOrder) {
+      bot.sendMessage(ADMIN_ID, "❌ Немає активного діалогу");
+      return;
+    }
+
+    bot.sendMessage(activeOrder.clientChatId, reply);
+  });
+
+  bot.onText(/\/done/, (msg) => {
+  if (msg.chat.id !== ADMIN_ID) return;
+
+  const activeOrder = Object.values(orders).find(o => o.status === "active");
+
+  if (!activeOrder) {
+    bot.sendMessage(ADMIN_ID, "❌ Немає активного діалогу");
+    return;
+  }
+
+  activeOrder.status = "done";
+
+  bot.sendMessage(activeOrder.clientChatId, "✅ Ваше замовлення завершено");
+  bot.sendMessage(ADMIN_ID, "✅ Діалог завершено");
+  });
+  
   let total = 0;
   order.cart.forEach(p => total += p.price);
 
