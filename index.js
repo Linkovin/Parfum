@@ -10,7 +10,7 @@ bot.on("message", (msg) => {
   console.log(msg.chat.id);
 });
 
-const orders = {};
+orders.json (файл)
 
 const ADMIN_ID = 827330746; // вставишь свой id
 let lastMessages = {};
