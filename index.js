@@ -3,6 +3,17 @@ const TelegramBot = require("node-telegram-bot-api");
 const fs = require("fs");
 
 const app = express();
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 app.use(express.json());
 
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
