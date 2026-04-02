@@ -12,7 +12,7 @@ bot.on("message", (msg) => {
 
 const orders = {};
 
-const ADMIN_ID = 123456789; // вставишь свой id
+const ADMIN_ID = 827330746; // вставишь свой id
 let lastMessages = {};
 
 app.post("/create-order", (req, res) => {
