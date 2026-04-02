@@ -6,17 +6,41 @@ app.use(express.json());
 
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 
+bot.on("message", (msg) => {
+  console.log(msg.chat.id);
+});
+
 const orders = {};
+
+const ADMIN_ID = 123456789; // вставишь свой id
+let lastMessages = {};
 
 app.post("/create-order", (req, res) => {
   const order = req.body;
   orders[order.orderNumber] = order;
+
+  let total = 0;
+  order.cart.forEach(p => total += p.price);
+
+  // 👉 уведомление тебе
+  bot.sendMessage(ADMIN_ID, `
+🆕 Нове замовлення №${order.orderNumber}
+
+👤 ${order.name} ${order.surname}
+📞 ${order.phone}
+
+💰 ${total} грн
+`);
+
   res.json({ ok: true });
 });
 
 bot.on("message", (msg) => {
   const text = msg.text;
   const chatId = msg.chat.id;
+
+  if (lastMessages[chatId] === text) return;
+  lastMessages[chatId] = text;
 
   const order = orders[text];
 
