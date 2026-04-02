@@ -25,7 +25,7 @@ let lastMessages = {};
 
 app.post("/create-order", (req, res) => {
   const order = req.body;
-  orders[order.orderNumber] = order;
+  orders[String(order.orderNumber)] = order;
   fs.writeFileSync("orders.json", JSON.stringify(orders, null, 2));
 
   let total = 0;
@@ -51,7 +51,7 @@ bot.on("message", (msg) => {
   if (lastMessages[chatId] === text) return;
   lastMessages[chatId] = text;
 
-  const order = orders[text];
+  const order = orders[String(text)];
 
   if (!order) {
     bot.sendMessage(chatId, "❌ Замовлення не знайдено");
