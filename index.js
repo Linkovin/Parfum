@@ -65,22 +65,9 @@ app.post("/create-order", (req, res) => {
     ]
   }
 });
-
-// ================= BUTTON HANDLER =================
-
-bot.on("callback_query", (query) => {
-  const data = query.data;
-  const chatId = query.message.chat.id;
-
-  if (chatId !== ADMIN_ID) return;
-
-  if (data.startsWith("open_")) {
-    const orderId = data.replace("open_", "");
-    adminSessions[ADMIN_ID] = orderId;
-
-    bot.sendMessage(ADMIN_ID, `✅ Ви підключились до замовлення №${orderId}`);
-  }
+  res.json({ ok: true });
 });
+  
 
 // ================= CLIENT MESSAGE =================
 
@@ -119,6 +106,22 @@ bot.on("message", (msg) => {
 `);
 });
 
+
+// ================= BUTTON HANDLER =================
+
+bot.on("callback_query", (query) => {
+  const data = query.data;
+  const chatId = query.message.chat.id;
+
+  if (chatId !== ADMIN_ID) return;
+
+  if (data.startsWith("open_")) {
+    const orderId = data.replace("open_", "");
+    adminSessions[ADMIN_ID] = orderId;
+
+    bot.sendMessage(ADMIN_ID, `✅ Ви підключились до замовлення №${orderId}`);
+  }
+});
 
 // ================= ADMIN REPLY =================
 
