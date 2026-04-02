@@ -1486,6 +1486,25 @@ if(!name || !surname || !phone){
 
 const orderNumber = 100000 + Math.floor(Math.random()*900000);
 
+fetch("https://parfum-u9pn.onrender.com/create-order", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    orderNumber,
+    name,
+    surname,
+    phone,
+    address,
+    payment,
+    cart
+  })
+})
+.then(res => res.json())
+.then(data => console.log("OK:", data))
+.catch(err => console.error("Ошибка:", err));
+
 let productsList = "";
 
 cart.forEach(p=>{
