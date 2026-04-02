@@ -1,5 +1,6 @@
 const express = require("express");
 const TelegramBot = require("node-telegram-bot-api");
+const fs = require("fs");
 
 const app = express();
 app.use(express.json());
@@ -10,7 +11,14 @@ bot.on("message", (msg) => {
   console.log(msg.chat.id);
 });
 
-orders.json (файл)
+let orders = {};
+
+try {
+  const data = fs.readFileSync("orders.json");
+  orders = JSON.parse(data);
+} catch (e) {
+  orders = {};
+}
 
 const ADMIN_ID = 827330746; // вставишь свой id
 let lastMessages = {};
@@ -18,6 +26,7 @@ let lastMessages = {};
 app.post("/create-order", (req, res) => {
   const order = req.body;
   orders[order.orderNumber] = order;
+  fs.writeFileSync("orders.json", JSON.stringify(orders, null, 2));
 
   let total = 0;
   order.cart.forEach(p => total += p.price);
