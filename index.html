@@ -13,6 +13,8 @@
       color: #1a1a1a;
       line-height: 1.6;
       overflow-x: hidden;
+      position: relative;
+      
 
     }
 
@@ -102,6 +104,7 @@
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s;
+      overscroll-behavior: contain;
     }
 
     .right-header button.cart-btn:hover {
@@ -537,20 +540,31 @@
 
     #toast {
       position: fixed;
-      bottom: 40px;
+      bottom: 90px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(20px);
+  
       background: #111;
       color: white;
-      padding: 14px 32px;
+  
+      padding: 14px 22px;
       border-radius: 12px;
+  
+      font-size: 14px;
+      font-weight: 500;
+
       opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 2000;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+
+      z-index: 9999;
+
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
 
-    #toast.show { opacity: 1; }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
     .order-popup {
       position: fixed;
@@ -1515,7 +1529,7 @@ function applyFilters() {
 function addToCart(i) {
   cart.push(products[i]);
   renderCart();
-  document.getElementById("toast").textContent = translate[lang].toastAdded;
+  document.getElementById("toast").innerHTML = "✅ Додано в кошик"
   showToast();
 }
 
