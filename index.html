@@ -331,26 +331,48 @@
 
     .card {
       background: white;
-      border-radius: 14px;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      transition: all 0.22s;
-    }
+
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+
+      transition: all 0.3s ease;
+      position: relative;
+
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    } 
 
     .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 16px 36px rgba(0,0,0,0.12);
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
     }
 
     .card img {
       width: 100%;
       height: 220px;
       object-fit: cover;
+      transition: transform 0.4s ease;
+
+    }
+
+    .card:hover img {
+      transform: scale(1.08);
     }
 
     .card-content {
       padding: 18px;
       text-align: center;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+    }
+
+    .card-content h3 {
+      min-height: 48px;
     }
 
     .price {
@@ -361,18 +383,22 @@
     }
 
     .buy {
-      background: #111;
+      background: linear-gradient(135deg, #111, #333);
       color: white;
       border: none;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s;
+
+      transition: all 0.25s ease;
+
+      margin-top: auto;
     }
 
     .buy:hover {
-      background: #d32f2f;
+      background: linear-gradient(135deg, #d32f2f, #ff5252);
+      transform: translateY(-2px);
     }
 
     .info-page {
@@ -417,7 +443,7 @@
       opacity: 0;
       visibility: hidden;
       transition: opacity 0.3s;
-      z-index: 900;
+      z-index: 800;
 
       pointer-events: none;
     }
@@ -486,7 +512,7 @@
       background: white;
       position: sticky;
       bottom: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .cart-total {
@@ -784,6 +810,60 @@
   font-size: 15px;
 }
 
+.back-btn {
+  font-family: 'Inter', sans-serif; /* как весь сайт */
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #555;
+  background: none;
+  border: none;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: 0.2s;
+}
+
+.back-btn:hover {
+  color: #111;
+  transform: translateX(-2px);
+}
+
+.back-to-cart {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.back-to-cart:hover {
+  color: #000;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+
+  background: #d32f2f;
+  color: white;
+
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+
+  border-radius: 8px;
+}
+
+.badge.new {
+  background: #2e7d32;
+}
 
 .logo {
   display: flex;
@@ -807,7 +887,7 @@
 }
 
 .logo-img {
-  height: 45px;
+  height: 50px;
   transform: scale(1.2);
   transform-origin: left center;
 }
@@ -853,7 +933,7 @@
 @media (max-width: 768px){
 
   .hero {
-    height: 140px;
+    height: 120px;
     padding-left: 20px;
     background-size: cover;
     background-position: center;
@@ -1253,6 +1333,11 @@ function addMessage(text, type){
 
 }
 
+function backToCart() {
+  document.getElementById("checkout").style.display = "none";
+  document.getElementById("cart").style.display = "block";
+}
+
 function aiAnswer(text){
 
   let response = ""
@@ -1481,28 +1566,34 @@ renderCart()
 }
 
 function renderProducts(list = products) {
-  document.getElementById("products").innerHTML = list.map((p, i) => `
-  <div class="card" onclick="openProduct(${i})">
+  const container = document.getElementById("products");
 
-    <img src="${p.img}" alt="${p.name}">
+  container.innerHTML = list.map((p, i) => `
+    <div class="card" onclick="openProduct(${i})">
 
-    <div class="card-content">
-      <h3>${p.name}</h3>
+      ${i === 0 ? '<div class="badge">ХІТ</div>' : ''}
+      ${i === 1 ? '<div class="badge new">NEW</div>' : ''}
+      ${i === 2 ? '<div class="badge">ХІТ</div>' : ''}
 
-      <div class="price">
-        ${p.price.toLocaleString('uk-UA')} грн
+      <img src="${p.img}" alt="${p.name}">
+
+      <div class="card-content">
+        <h3>${p.name}</h3>
+
+        <div class="price">
+          ${p.price.toLocaleString('uk-UA')} грн
+        </div>
+
+        <button class="buy"
+          onclick="event.stopPropagation(); addToCart(${i})">
+          ${translate[lang].buy}
+        </button>
       </div>
 
-      <button class="buy"
-      onclick="event.stopPropagation(); addToCart(${i})">
-      ${translate[lang].buy}
-      </button>
-
     </div>
-
-  </div>
-`).join('');
+  `).join('');
 }
+
 
 function goHome(){
   openPage("catalog")
@@ -1529,7 +1620,16 @@ function applyFilters() {
 function addToCart(i) {
   cart.push(products[i]);
   renderCart();
-  document.getElementById("toast").innerHTML = "✅ Додано в кошик"
+
+  const cards = document.querySelectorAll(".card");
+  const card = cards[i];
+
+  card.style.transform = "scale(0.95)";
+  setTimeout(() => {
+    card.style.transform = "";
+  }, 150);
+
+  document.getElementById("toast").innerHTML = "✅ Додано в кошик";
   showToast();
 }
 
@@ -1646,6 +1746,12 @@ function showCheckoutForm() {
   document.getElementById("cartItems").innerHTML = `
     <div style="padding:20px 0;">
     
+      <div style="margin-bottom:15px;">
+        <button onclick="renderCart()" class="back-btn">
+        ← Назад
+      </button>
+    </div>
+
       <input id="name" placeholder="${translate[lang].name}"
       style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
 
