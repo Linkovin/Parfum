@@ -405,7 +405,7 @@
     /* Кошик */
     .cart-overlay {
       position: fixed;
-      inset: 0;
+            inset: 0;
       background: linear-gradient(
       to right,
      rgba(0,0,0,0.7),
@@ -415,11 +415,14 @@
       visibility: hidden;
       transition: opacity 0.3s;
       z-index: 900;
+
+      pointer-events: none;
     }
 
     .cart-overlay.active {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
     }
 
     .cart-drawer {
