@@ -273,9 +273,19 @@
     background:url("bg.png") center/cover no-repeat;
 
     box-shadow:0 6px 24px rgba(0,0,0,0.25);
-  
+
   }
 
+  @media (max-width: 768px){
+      .hero {
+      height: 180px;
+      padding-left: 20px;
+    }
+
+    .hero h1 {
+      font-size: 24px;
+    }
+  }
 
   .hero h1,
   .hero p{
@@ -754,6 +764,7 @@
   font-size: 15px;
 }
 
+
 .logo {
   display: flex;
   align-items: center;
@@ -798,6 +809,72 @@
   font-size: 13px;
   color: #777;
 }
+
+.burger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: white;
+}
+
+@media (max-width: 768px){
+
+  .cart-drawer {
+    width: 100%;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .menu {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    width: 100%;
+    background: #111;
+    flex-direction: column;
+    padding: 20px;
+    transition: 0.3s;
+    z-index: 2000;
+  }
+
+  .menu.active {
+    left: 0;
+  }
+
+  .menu a {
+    padding: 12px 0;
+    font-size: 18px;
+  }
+
+    .products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .card img {
+    height: 160px;
+  }
+
+  .card-content {
+    padding: 10px;
+  }
+
+    .search-bar {
+    flex-direction: column;
+  }
+
+  .filter-panel {
+    flex-direction: column;
+  }
+
+  .product-popup-content {
+    width: 95%;
+    padding: 20px;
+  }
+
+}
   </style>
 </head>
 <body>
@@ -808,6 +885,8 @@
       <img src="logo.png" class="logo-img">
       Всесвіт парфум
     </div>
+
+    <div class="burger" onclick="toggleMenu()">☰</div>
 
     <nav class="menu">
       <a data-page="catalog"  onclick="openPage('catalog')">Каталог</a>
@@ -1179,11 +1258,6 @@ function aiAnswer(text){
 }
 
   addMessage(response, "bot")
-  if(type === "bot"){
-  const audio = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b0b7c.mp3")
-  audio.volume = 0.15
-  audio.play()
-  }
 }
 
 
@@ -1260,10 +1334,10 @@ function setLang(l){
 
 
 document.getElementById("filterCategory").innerText =
-lang==="ua" ? "Для кого" : "Для кого"
+l==="ua" ? "Для кого" : "Для кого"
 
 document.getElementById("filterScent").innerText =
-lang==="ua" ? "Тип аромату" : "Тип аромата"  
+l==="ua" ? "Тип аромату" : "Тип аромата"
 document.getElementById("searchInput").placeholder =
 l==="ua" ? "Пошук парфумів..." : "Поиск парфюма..."
 
@@ -1389,6 +1463,10 @@ renderProducts(filtered)
 
 }
 
+function toggleMenu(){
+  document.querySelector(".menu").classList.toggle("active")
+}
+
 function renderCart() {
   const itemsEl = document.getElementById("cartItems");
   const totalEl = document.getElementById("cartTotal");
@@ -1443,12 +1521,7 @@ document.getElementById("productPopup").classList.add("active")
 }
 
 function closeProduct(){
-document.getElementById("productPopup").addEventListener("click", (e)=>{
-  if(e.target.id === "productPopup"){
-    closeProduct();
-  }
-});
-document.getElementById("productPopup").classList.remove("active")
+  document.getElementById("productPopup").classList.remove("active")
 }
 
 function toggleCart() {
@@ -1609,7 +1682,7 @@ function openPage(page) {
   history.pushState({page}, "", "/" + page);
   window.scrollTo({top: 0, behavior: "smooth"});
 
-  
+  document.querySelector(".menu").classList.remove("active");
 }
 
 // Ініціалізація
@@ -1644,6 +1717,12 @@ document.addEventListener("keydown", (e)=>{
   if(e.key === "Escape"){
     closeProduct();
     closeOrder();
+  }
+});
+
+document.getElementById("productPopup").addEventListener("click", (e)=>{
+  if(e.target.id === "productPopup"){
+    closeProduct();
   }
 });
 
