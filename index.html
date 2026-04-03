@@ -437,6 +437,7 @@
       z-index: 950;
       display: flex;
       flex-direction: column;
+      touch-action: none;
     }
 
     .cart-drawer.active { right: 0; }
@@ -451,6 +452,8 @@
       flex: 1;
       overflow-y: auto;
       padding: 0 24px;
+      touch-action: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     #cartItems {
@@ -501,6 +504,9 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.22s;
+      position: relative;
+      z-index: 10000;
+      touch-action: manipulation;
     }
 
     .checkout-btn:hover:not(:disabled) {
