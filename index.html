@@ -450,6 +450,10 @@
       padding: 0 24px;
     }
 
+    #cartItems {
+      padding-bottom: 100px;
+    }
+
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -908,6 +912,21 @@
   .right-header button.cart-btn {
     padding: 8px 10px;
     font-size: 20px;
+  }
+
+  .cart-summary {
+    padding: 20px 24px;
+    border-top: 2px solid #eee;
+    background: white;
+
+    position: sticky;
+    bottom: 0;
+
+    z-index: 9999; /* ВАЖНО */
+  }
+
+  .checkout-btn {
+    touch-action: manipulation;
   }
 }
 
@@ -1581,8 +1600,11 @@ function toggleCart() {
   drawer.classList.toggle("active")
   overlay.classList.toggle("active")
 
-  // 👉 если закрыли корзину — прокрутка вверх
-  if (isOpen) {
+  // 🔒 БЛОКИРУЕМ СКРОЛЛ ФОНА
+  if (!isOpen) {
+    document.body.style.overflow = "hidden"
+  } else {
+    document.body.style.overflow = "auto"
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 }
