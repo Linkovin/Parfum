@@ -111,7 +111,7 @@
 
     #aiChatBtn{
       position:fixed;
-      bottom:25px;
+      bottom:120px;
       right:25px;
       background:#111;
       color:white;
@@ -1609,6 +1609,14 @@ function toggleCart() {
   } else {
     document.body.style.overflow = "auto"
     window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const ai = document.getElementById("aiChatBtn")
+
+  if (!isOpen) {
+    ai.style.display = "none"   // скрыли AI
+  } else {
+    ai.style.display = "flex"   // вернули обратно
   }
 }
 
