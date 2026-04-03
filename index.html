@@ -881,7 +881,7 @@
 
 <header>
   <div class="header-inner">
-    <div class="logo">
+    <div class="logo" onclick="goHome()" style="cursor:pointer;">
       <img src="logo.png" class="logo-img">
       Всесвіт парфум
     </div>
@@ -1420,6 +1420,11 @@ function renderProducts(list = products) {
 `).join('');
 }
 
+function goHome(){
+  openPage("catalog")
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
+
 function closeOrder(){
 document.getElementById("orderPopup").classList.remove("active")
 }
@@ -1526,9 +1531,18 @@ function closeProduct(){
 }
 
 function toggleCart() {
-  document.getElementById("cartDrawer").classList.toggle("active");
-  document.getElementById("cartOverlay").classList.toggle("active");
-  history.pushState({cart:true}, "", "#cart")
+  const drawer = document.getElementById("cartDrawer")
+  const overlay = document.getElementById("cartOverlay")
+
+  const isOpen = drawer.classList.contains("active")
+
+  drawer.classList.toggle("active")
+  overlay.classList.toggle("active")
+
+  // 👉 если закрыли корзину — прокрутка вверх
+  if (isOpen) {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 }
 
 function showCheckoutForm() {
