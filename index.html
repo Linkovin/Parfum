@@ -12,6 +12,8 @@
       background: #f9f9f9;
       color: #1a1a1a;
       line-height: 1.6;
+      overflow-x: hidden;
+
     }
 
     html {
@@ -34,6 +36,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 20px;
+      
     }
 
     .logo {
@@ -823,7 +826,7 @@
 @media (max-width: 768px){
 
   .hero {
-    height: 160px;
+    height: 140px;
     padding-left: 20px;
     background-size: cover;
     background-position: center;
@@ -893,6 +896,13 @@
     font-size: 18px;
     line-height: 1.1;
     white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+  }
+
+  .right-header button.cart-btn {
+    padding: 8px 10px;
+    font-size: 20px;
   }
 }
 
