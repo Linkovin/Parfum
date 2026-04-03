@@ -1517,6 +1517,7 @@ document.getElementById("popupPrice").innerText = p.price + " грн"
 document.getElementById("popupBuy").onclick = () => addToCart(i)
 
 document.getElementById("productPopup").classList.add("active")
+history.pushState({product:true}, "", "#product")
 
 }
 
@@ -1527,6 +1528,7 @@ function closeProduct(){
 function toggleCart() {
   document.getElementById("cartDrawer").classList.toggle("active");
   document.getElementById("cartOverlay").classList.toggle("active");
+  history.pushState({cart:true}, "", "#cart")
 }
 
 function showCheckoutForm() {
@@ -1730,6 +1732,27 @@ window.onpopstate = function(event){
   const page = location.pathname.replace("/", "") || "catalog"
   openPage(page)
 }
+
+// 👉 перехват кнопки "назад"
+window.addEventListener("popstate", function () {
+
+  // если открыта корзина — закрываем её
+  if (document.getElementById("cartDrawer").classList.contains("active")) {
+    toggleCart()
+    history.pushState(null, "", location.pathname)
+    return
+  }
+
+  // если открыто окно товара — закрываем
+  if (document.getElementById("productPopup").classList.contains("active")) {
+    closeProduct()
+    history.pushState(null, "", location.pathname)
+    return
+  }
+
+  // иначе возвращаем в каталог
+  openPage("catalog")
+})
 
 </script>
 <!-- AI Консультант -->
