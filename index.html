@@ -773,6 +773,19 @@
   overflow: hidden; /* обрезает лишнее */
 }
 
+.cart-back {
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  transition: 0.2s;
+}
+
+.cart-back:hover {
+  background: #ddd;
+}
+
 .logo-img {
   height: 45px;
   transform: scale(1.2);
@@ -1020,7 +1033,13 @@
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 
 <div class="cart-drawer" id="cartDrawer">
-  <h2 id="cartTitle">Кошик</h2>
+  <div style="display:flex; align-items:center; gap:10px; padding:20px;">
+    
+    <span onclick="toggleCart()" class="cart-back">➜</span>
+
+    <h2 id="cartTitle" style="margin:0;">Кошик</h2>
+
+  </div>
 
   <div id="cartItems"></div>
 
@@ -1741,11 +1760,6 @@ document.getElementById("productPopup").addEventListener("click", (e)=>{
     closeProduct();
   }
 });
-
-window.onpopstate = function(event){
-  const page = location.pathname.replace("/", "") || "catalog"
-  openPage(page)
-}
 
 // 👉 перехват кнопки "назад"
 window.addEventListener("popstate", function () {
