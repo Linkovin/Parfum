@@ -1276,6 +1276,15 @@ img:"https://images.unsplash.com/photo-1594035910387-fea47794261f"
 let cart = [];
 let lang = "ua";
 
+let discount = 0;
+let promoApplied = false;
+
+const promoCodes = {
+  "SALE10": 10,
+  "SALE20": 20,
+  "VANTO": 15
+};
+
 function toggleAIChat(){
 
   const chat = document.getElementById("aiChat")
@@ -1686,7 +1695,27 @@ function renderCart() {
   }
 
   itemsEl.innerHTML = html;
-  totalEl.textContent = total.toLocaleString('uk-UA');
+  let originalTotal = total;
+  let finalTotal = total;
+
+  if (promoApplied) {
+    finalTotal = Math.round(total * (1 - discount / 100));
+  }
+
+// 👇 ВИВІД
+  if (promoApplied) {
+    totalEl.innerHTML = `
+      <span style="text-decoration:line-through; color:#999;">
+        ${originalTotal.toLocaleString('uk-UA')}
+      </span>
+      → 
+      <span style="color:#d32f2f;">
+        ${finalTotal.toLocaleString('uk-UA')}
+      </span>
+    `;
+  } else {
+    totalEl.textContent = total.toLocaleString('uk-UA');
+  }
   document.getElementById("cartCount").textContent = cart.length;
 }
 
@@ -1751,6 +1780,7 @@ function showCheckoutForm() {
         <button onclick="renderCart()" class="back-btn">
         ← Назад
       </button>
+
     </div>
 
       <input id="name" placeholder="${translate[lang].name}"
@@ -1773,6 +1803,24 @@ function showCheckoutForm() {
       <option value="crypto">Криптовалюта</option>
 
       </select>
+
+    <div style="margin-top:10px;">
+      <input id="promoInput" placeholder="Промокод"
+      style="width:100%; padding:14px; margin:10px 0; border:1px solid #ddd; border-radius:10px;">
+
+      <button onclick="applyPromo()" style="
+        width:100%;
+        padding:12px;
+        border:none;
+        background:#ffd54f;
+        border-radius:10px;
+        cursor:pointer;
+        font-weight:600;">
+        Перевірити
+      </button>
+
+      <div id="promoMessage" style="margin-top:6px; font-size:13px;"></div>
+    </div>
 
       <button class="checkout-btn" onclick="createOrder()" style="margin-top:20px;">
       ${translate[lang].confirm}
@@ -1816,6 +1864,13 @@ fetch("https://parfum-u9pn.onrender.com/create-order", {
 .then(data => console.log("OK:", data))
 .catch(err => console.error("Ошибка:", err));
 
+let total = 0;
+cart.forEach(p => total += p.price);
+
+let finalTotal = promoApplied
+  ? Math.round(total * (1 - discount / 100))
+  : total;
+
 let productsList = "";
 
 cart.forEach(p=>{
@@ -1825,34 +1880,75 @@ productsList += `<li>${p.name} — ${p.price} грн</li>`;
 document.getElementById("orderNumber").innerText = "№ " + orderNumber;
 
 document.getElementById("thanksText").innerHTML = `
-<b>${name} ${surname}</b><br>
-Телефон: ${phone}<br>
-Доставка: ${address}<br>
-Спосіб оплати: ${
-payment==="card" ? "Банківська карта" :
-payment==="cash" ? "Післяплата" :
-"Криптовалюта"
-}
 
-<br><br>
+<div style="margin-top:10px; font-size:15px; color:#555;">
+  ${name} ${surname}
+</div>
 
-<b>${lang==="ua" ? "Ваше замовлення" : "Ваш заказ"}:</b>
+<div style="font-size:14px; color:#777; margin-bottom:10px;">
+  📞 ${phone}
+</div>
 
-<ul style="text-align:left;margin:10px auto;padding-left:20px;max-width:260px">
-${productsList}
-</ul>
+<div style="font-size:14px; color:#777; margin-bottom:15px;">
+  📦 ${address || "—"}
+</div>
 
-<br>
+<div style="
+  background:#f7f7f7;
+  padding:15px;
+  border-radius:12px;
+  margin:15px 0;
+  text-align:left;
+">
 
-${lang==="ua"
-? "Для оплати перейдіть у Telegram бот і надішліть номер замовлення."
-: "Для оплаты перейдите в Telegram бот и отправьте номер заказа."}
+  <div style="font-size:14px; color:#555; margin-bottom:8px;">
+    ${payment==="card" ? "💳 Банківська карта" :
+      payment==="cash" ? "💵 Післяплата" :
+      "₿ Криптовалюта"}
+  </div>
 
-<br><br>
+  <div style="font-weight:600; margin-bottom:6px;">
+    ${lang==="ua" ? "Ваше замовлення" : "Ваш заказ"}:
+  </div>
+
+  <ul style="padding-left:18px; margin:0;">
+    ${productsList}
+  </ul>
+
+</div>
+
+<div style="font-size:18px; font-weight:700; margin:10px 0;">
+  ${
+    promoApplied
+      ? `<span style="text-decoration:line-through; color:#999;">
+           ${total.toLocaleString('uk-UA')}
+         </span>
+         <span style="margin: 0 8px; opacity:0.6;">→</span>
+         <span style="color:#d32f2f;">
+           ${finalTotal.toLocaleString('uk-UA')} грн
+         </span>`
+      : `${total.toLocaleString('uk-UA')} грн`
+  }
+</div>
+
+<div style="font-size:13px; color:#777; margin-top:10px;">
+  ${lang==="ua"
+    ? "Після оформлення напишіть у Telegram і вкажіть номер замовлення."
+    : "После оформления напишите в Telegram и укажите номер заказа."}
+</div>
 
 <a id="tgLink" target="_blank"
-style="color:#d32f2f;font-weight:bold;">
-Написати в Telegram
+style="
+  display:block;
+  margin-top:15px;
+  padding:14px;
+  background:#d32f2f;
+  color:white;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+">
+  Написати в Telegram
 </a>
 `;
 
@@ -1901,6 +1997,50 @@ function openPage(page) {
   window.scrollTo({top: 0, behavior: "smooth"});
 
   document.querySelector(".menu").classList.remove("active");
+}
+
+
+function applyPromo() {
+  const code = document.getElementById("promoInput").value.trim().toUpperCase();
+  const msg = document.getElementById("promoMessage");
+
+  if (promoCodes[code]) {
+    discount = promoCodes[code];
+    promoApplied = true;
+
+    msg.innerHTML = "✅ Знижка " + discount + "% застосована";
+    msg.style.color = "green";
+  } else {
+    discount = 0;
+    promoApplied = false;
+
+    msg.innerHTML = "❌ Невірний промокод";
+    msg.style.color = "red";
+  }
+
+  // 🔥 ОНОВЛЮЄМО ТІЛЬКИ СУМУ ВНИЗУ (БЕЗ ПЕРЕМАЛЬОВКИ КОШИКА)
+  let total = 0;
+  cart.forEach(p => total += p.price);
+
+  let final = promoApplied
+    ? Math.round(total * (1 - discount / 100))
+    : total;
+
+  const totalEl = document.getElementById("cartTotal");
+
+  if (promoApplied) {
+    totalEl.innerHTML = `
+      <span style="text-decoration:line-through; color:#999;">
+        ${total.toLocaleString('uk-UA')}
+      </span>
+      <span style="margin: 0 8px; color:#999;">→</span> 
+      <span style="color:#d32f2f;">
+        ${final.toLocaleString('uk-UA')}
+      </span>
+    `;
+  } else {
+    totalEl.textContent = total.toLocaleString('uk-UA');
+  }
 }
 
 // Ініціалізація
