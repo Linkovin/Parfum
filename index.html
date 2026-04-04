@@ -177,6 +177,31 @@
     margin-bottom:10px;
   }
 
+  .ai-product{
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid #eee;
+}
+
+  .ai-product:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  .ai-product-name{
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .ai-product-price{
+    font-size: 12px;
+    color: #d32f2f;
+  }
+
   .ai-user{
     text-align:right;
     color:#333;
@@ -189,13 +214,11 @@
   }
 
   .ai-bot{
-    text-align:left;
-    color:#d32f2f;
-    background:#f5f5f5;
-    padding:8px 12px;
-    border-radius:10px;
-    display:inline-block;
-    max-width:85%;
+  background: #f1f1f1;
+  color: #111;
+  border-radius: 12px;
+  padding: 10px 12px;
+  max-width: 85%;
   }
 
   #aiInputBox{
@@ -804,6 +827,47 @@
   font-size: 15px;
 }
 
+.ai-welcome{
+  background: linear-gradient(135deg, #111, #1c1c1c);
+  color: white;
+  padding: 14px;
+  border-radius: 14px;
+}
+
+.ai-title{
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.ai-sub{
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+.ai-quick{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ai-quick button{
+  background: #ffd54f;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.ai-quick button:hover{
+  background: #ffca28;
+  transform: translateY(-1px);
+}
+
 .perfume-spray {
   position: fixed;
   width: 10px;
@@ -1318,13 +1382,18 @@ function toggleAIChat(){
      document.getElementById("aiMessages").innerHTML === ""){
 
     addMessage(`
-    Привіт 👋<br><br>
+    <div class="ai-welcome">
+      <div class="ai-title">👋 Вітаю у Всесвіт парфум</div>
+      <div class="ai-sub">Я допоможу підібрати аромат</div>
 
-    <div onclick="quickAsk('покажи всі')" style="cursor:pointer">• покажи всі</div>
-    <div onclick="quickAsk('дешеві')" style="cursor:pointer">• дешеві</div>
-    <div onclick="quickAsk('dior')" style="cursor:pointer">• Dior</div>
-    <div onclick="quickAsk('жіночі')" style="cursor:pointer">• жіночі аромати</div>
-    `, "bot")
+    <div class="ai-quick">
+      <button onclick="quickAsk('покажи всі')">Всі аромати</button>
+      <button onclick="quickAsk('дешеві')">До 1500 грн</button>
+      <button onclick="quickAsk('dior')">Dior</button>
+      <button onclick="quickAsk('жіночі')">Жіночі</button>
+    </div>
+  </div>
+  `, "bot")
 
   }
 
@@ -1380,89 +1449,147 @@ function aiAnswer(text){
 
   let response = ""
 
-  // 1. приветствие (СНАЧАЛА)
+  // 1. приветствие
   if(text.includes("привет") || text.includes("hello") || text.includes("hi")){
-    response = "Привіт 👋 Я допоможу знайти парфуми. Напиши, що шукаєш."
+    response = "👋 Привіт! Я допоможу знайти ідеальний аромат. Напиши, що шукаєш."
   }
 
-  // 2. показать все товары
+  // 2. всі товари
   else if(text.includes("все") || text.includes("товары") || text.includes("покажи")){
-    response = products.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
+    response = products.map((p,i)=>`
+      <div class="ai-product" onclick="openProduct(${i})">
+        <div class="ai-product-name">${p.name}</div>
+        <div class="ai-product-price">${p.price} грн</div>
+      </div>
+    `).join("")
   }
 
-  // 3. дешевый
+  // 3. дешевий
   else if(text.includes("дешев") || text.includes("cheap")){
     const cheapest = [...products].sort((a,b)=>a.price-b.price)[0]
-    response = `Найдешевший: ${cheapest.name} — ${cheapest.price} грн`
+
+    response = `
+      <div class="ai-product">
+        <div class="ai-product-name">🔥 Найдешевший</div>
+        <div>${cheapest.name}</div>
+        <div class="ai-product-price">${cheapest.price} грн</div>
+      </div>
+    `
   }
 
-  // 4. дорогой
+  // 4. дорогий
   else if(text.includes("дорог") || text.includes("expensive")){
     const expensive = [...products].sort((a,b)=>b.price-a.price)[0]
-    response = `Найдорожчий: ${expensive.name} — ${expensive.price} грн`
+
+    response = `
+      <div class="ai-product">
+        <div class="ai-product-name">💎 Найдорожчий</div>
+        <div>${expensive.name}</div>
+        <div class="ai-product-price">${expensive.price} грн</div>
+      </div>
+    `
   }
 
-  else if(text.includes("муж") || text.includes("men")){
-  const list = products.filter(p=>p.category==="men")
-  response = list.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
-  }
+  // 5. чоловічі
+  else if(
+    text.includes("муж") || 
+    text.includes("men") || 
+    text.includes("чолов") ||
+    text.includes("male")
+  ){
+    const list = products.filter(p=>p.category==="men")
 
-  else if(text.includes("жен") || text.includes("women")){
-  const list = products.filter(p=>p.category==="women")
-  response = list.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
-  }
-
-  else if(text.includes("до")){
-  const num = parseInt(text)
-  if(num){
-    const list = products.filter(p=>p.price <= num)
     response = list.length
-      ? list.map(p=>`• ${p.name} (${p.price} грн)`).join("<br>")
-      : "Нічого не знайдено 😔"
-    }
-  }
-  
-  // 5. поиск товара (ПОСЛЕ общих команд)
-  else{
-
-  // 1. точное совпадение
-  const found = products.find(p =>
-    similar(text, p.name.toLowerCase())
-  )
-
-  if(found){
-    response = `Є товар: <b>${found.name}</b><br>
-    Ціна: ${found.price} грн`
-  }
-
-  else{
-
-    // 2. поиск похожих (по словам)
-    const suggestions = products.filter(p => {
-      const words = p.name.toLowerCase().split(" ")
-      return words.some(w => text.includes(w))
-    })
-
-    if(suggestions.length){
-
-      response = `Можливо ви мали на увазі 👇<br><br>` +
-      suggestions.map(p=>{
-        const index = products.indexOf(p)
-        return `
-          <div style="margin-bottom:6px; cursor:pointer; color:#111"
-          onclick="openProduct(${index})">
-          • ${p.name} (${p.price} грн)
-          <button onclick="addToCart(${index})" style="margin-left:10px;">🛒</button>
+      ? list.map((p,i)=>`
+          <div class="ai-product" onclick="openProduct(${i})">
+            <div class="ai-product-name">${p.name}</div>
+            <div class="ai-product-price">${p.price} грн</div>
           </div>
-        `
-      }).join("")
+        `).join("")
+      : "😔 Нічого не знайдено"
+  }
 
-    } else {
-      response = "Я не знайшов товар 😔 Спробуй написати точніше або назву парфуму"
+  // 6. жіночі
+  else if(
+    text.includes("жен") || 
+    text.includes("women") ||
+    text.includes("жіноч") ||
+    text.includes("girl") ||
+    text.includes("female")
+  ){
+    const list = products.filter(p=>p.category==="women")
+
+    response = list.length
+      ? list.map((p,i)=>`
+          <div class="ai-product" onclick="openProduct(${i})">
+            <div class="ai-product-name">${p.name}</div>
+            <div class="ai-product-price">${p.price} грн</div>
+          </div>
+        `).join("")
+      : "😔 Нічого не знайдено"
+  }
+
+  // 7. до ціни
+  else if(text.includes("до")){
+    const num = parseInt(text)
+
+    if(num){
+      const list = products.filter(p=>p.price <= num)
+
+      response = list.length
+        ? list.map((p,i)=>`
+            <div class="ai-product" onclick="openProduct(${i})">
+              <div class="ai-product-name">${p.name}</div>
+              <div class="ai-product-price">${p.price} грн</div>
+            </div>
+          `).join("")
+        : "😔 Нічого не знайдено"
+    }
+  }
+
+  // 8. пошук товару
+  else{
+
+    const found = products.find(p =>
+      similar(text, p.name.toLowerCase())
+    )
+
+    if(found){
+      const index = products.indexOf(found)
+
+      response = `
+        <div class="ai-product" onclick="openProduct(${index})">
+          <div class="ai-product-name">${found.name}</div>
+          <div class="ai-product-price">${found.price} грн</div>
+        </div>
+      `
     }
 
+    else{
+
+      const suggestions = products.filter(p => {
+        const words = p.name.toLowerCase().split(" ")
+        return words.some(w => text.includes(w))
+      })
+
+      if(suggestions.length){
+        response = "💡 Можливо ви мали на увазі:<br><br>" +
+        suggestions.map(p=>{
+          const index = products.indexOf(p)
+          return `
+            <div class="ai-product" onclick="openProduct(${index})">
+              <div class="ai-product-name">${p.name}</div>
+              <div class="ai-product-price">${p.price} грн</div>
+            </div>
+          `
+        }).join("")
+      }
+
+      else{
+        response = "😔 Я не знайшов товар. Спробуй написати назву точніше"
+      }
+    }
   }
-}
 
   addMessage(response, "bot")
 }
